@@ -13,9 +13,9 @@ class ViewController: UITableViewController {
 
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var itemArray = [Item]()
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
-    let encoder = PropertyListEncoder()
-    let decoder = PropertyListDecoder()
+    // let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    // let encoder = PropertyListEncoder()
+    // let decoder = PropertyListDecoder()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,5 +100,18 @@ extension ViewController: UISearchBarDelegate {
 		let sortDiscriptor = NSSortDescriptor(key: "title", ascending: true)
         request.sortDescriptors = [sortDiscriptor]
         loadItems(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            // switch to main thread to respond faster
+            DispatchQueue.main.async {
+                // no longer to be in focus 
+                searchBar.resignFirstResponder()
+            }
+            
+        }
     }
 }
